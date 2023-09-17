@@ -1,0 +1,28 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'core/css/log.css' %}">
+    <title>Home</title>
+</head>
+<body>
+    <header>
+    </header>
+    <nav></nav>
+    <main>
+        <div class="content_sesion">
+        <h2>Bienvenido al portal de la clinica nombre</h2><br><br><br>
+        <p>En el prodra solicitar y consultar turnos, acceder a los resultados de sus estudios</p><br><br><br>
+        <a href="{% url 'login' %}">
+            <button class="button_ingreso">
+                <p>INGRESAR</p>
+            </button>
+        </a>
+        </div>
+    </main>
+
+    <footer></footer>
+</body>
+</html>
