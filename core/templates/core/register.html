@@ -1,0 +1,35 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'core/css/log.css' %}">
+    <title>REGISTRO</title>
+</head>
+<body>
+    <main>
+        <div class="content_sesion">
+            <h2>Registrarse</h2>
+            <form>
+                <p>Usuario</p>
+                <input type="text">
+                <p>DNI</p>
+                <input type="number">
+                <p>Mail</p>
+                <input type="email">
+                <p>Fecha de nacimiento</p>
+                <input type="date">
+                <p>Contraseña</p>
+                <input type="password">
+            </form>
+            <a href="{% url 'login' %}">
+                <button class="button_ingreso">
+                    <p>REGISTRAR</p>
+                </button>
+            </a>
+            <a href="{% url 'register' %}""><p>Registrarse?</p></a>
+        </div>
+    </main>
+</body>
+</html>
