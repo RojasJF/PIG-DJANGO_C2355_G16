@@ -1,7 +1,13 @@
-{% extends "core/base.html" %}
-{% block title %}Contactos{% endblock %}
+
+
 {% block header %}
  <br>
-<h2>CONTACTOS</h2> 
+<h2>CONTACTANOS</h2> 
 {% endblock %}
-{% block content %}{% endblock %}
+{% block content %}
+<form method="post" action="{% url 'contact' %}">
+    {% csrf_token %}
+    {{ contacto_form.as_p }}
+    <input type="submit">
+</form>
+{% endblock %}

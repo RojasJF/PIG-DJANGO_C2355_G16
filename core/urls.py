@@ -11,5 +11,5 @@ urlpatterns = [
     path ('mis_turnos/<str:user_name>' ,views.mis_turnos, name='mis_turnos'),
     path ('estudios_lab/<str:user_name>' ,views.estudios_lab, name='estudios_lab'),
     path ('estudios_img/<str:user_name>' ,views.estudios_img, name='estudios_img'),
-    path ('contact/<str:user_name>' ,views.contact, name='contact'),
+    path ('contact' ,views.contact, name='contact'),
 ]

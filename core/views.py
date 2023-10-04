@@ -1,5 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.http import HttpResponse
+from django.urls import reverse
+from datetime import datetime
+from .forms import ContactoForm , RegisterForm
+from .models import Persona
 
 
 def index(request):
@@ -8,7 +13,20 @@ def index(request):
 
 def register(request):
 
-    return render(request, 'core/register.html')
+    if request.method == "POST":
+        formulario = RegisterForm(request.POST)
+
+        if formulario.is_valid():
+            messages.info(request,"Registro Exitoso")
+            return redirect(reverse("login"))
+    else:
+        formulario = RegisterForm()
+
+    context={
+        'Registro_form':formulario
+    }
+
+    return render(request, 'core/register.html',context)
 
 def login(request):
 
@@ -59,11 +77,19 @@ def estudios_img(request, user_name):
 
     return render(request, 'core/estudios_img.html',context)
 
-def contact(request,user_name):
-
-    context = {
-        'user_name': user_name
-    }
+def contact(request):
     
-    return render(request,'core/contact.html',context)
+    if request.method == "POST":
+        formulario = ContactoForm(request.POST)
 
+        if formulario.is_valid():
+          
+            return redirect(reverse("login"))
+    else:
+        formulario = ContactoForm()
+
+    context={
+        'contacto_form':formulario
+    }
+
+    return render (request, "core/contact.html", context)
