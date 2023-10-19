@@ -1,0 +1,34 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header{
+background-color: white;
+}
+body{
+    background-color: #555;
+    
+}
+
+h1{
+    text-align: center;
+}
+h2{
+    background-color: aqua
+}
+div {
+    text-align: center;
+    margin: 20px;
+}
+.content_sesion {
+
+    
+    border: 20px solid #555;
+    background: white;
+    width: 300px; 
+    margin: auto;
+    margin-top: 15%;
+
+}
