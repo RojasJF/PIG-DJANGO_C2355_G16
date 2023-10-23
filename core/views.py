@@ -4,12 +4,13 @@ from django.http import HttpResponse
 from django.urls import reverse
 from datetime import datetime
 from .forms import ContactoForm , RegisterForm
-from .models import Persona
+from .models import Persona, Paciente , Medico
 
 
 def index(request):
     
     return render(request,'core/index.html')
+
 
 def register(request):
 
@@ -17,7 +18,20 @@ def register(request):
         formulario = RegisterForm(request.POST)
 
         if formulario.is_valid():
+            
             messages.info(request,"Registro Exitoso")
+            
+            p1 = Paciente(
+                nombre = formulario.cleaned_data['nombre'],
+                apellido = formulario.cleaned_data['apellido'],
+                dni = formulario.cleaned_data['dni'],
+                edad = formulario.cleaned_data['edad'],
+                mail = formulario.cleaned_data['mail'] ,
+                contraseña = formulario.cleaned_data['contraseña']
+            )
+            p1.save()
+            
+            
             return redirect(reverse("login"))
     else:
         formulario = RegisterForm()
@@ -26,7 +40,10 @@ def register(request):
         'Registro_form':formulario
     }
 
+    
+
     return render(request, 'core/register.html',context)
+
 
 def login(request):
 

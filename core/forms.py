@@ -27,12 +27,12 @@ class ContactoForm(forms.Form):
     
 
 class RegisterForm(forms.Form):
-    nombre = forms.CharField(label="Nombre de contacto", required=True)
-    apellido =forms.CharField(label="Apellido de contacto", required=True)
-    DocIdN = forms.CharField(label="DNI", required=True,widget=forms.NumberInput,max_length=8)
+    nombre = forms.CharField(label="Nombre", required=True)
+    apellido =forms.CharField(label="Apellido", required=True)
+    dni = forms.CharField(label="DNI", required=True,widget=forms.NumberInput,max_length=8)
     edad = forms.IntegerField(label="Edad")
     mail = forms.EmailField(label="Mail", required=True)
-    Contraseña = forms.CharField(min_length=4,max_length=50,widget=forms.PasswordInput(),label="Contraseña         ")
+    contraseña = forms.CharField(min_length=4,max_length=50,widget=forms.PasswordInput(),label="Contraseña ")
     # Rcontraseña = forms.CharField(min_length=4,max_length=50,widget=forms.PasswordInput(),label="Repetir Contraseña")
 
     def clean_edad(self):
@@ -40,13 +40,11 @@ class RegisterForm(forms.Form):
             raise ValidationError("El usuario no puede tener menos de 18 años")
         
         return self.cleaned_data["edad"]
-
-
         
-    def clean(self):
-        # Este if simula una busqueda en la base de datos
-        if self.cleaned_data["DocIdN"] == "55555555":
-            raise ValidationError("DNI registrado por favor verifique de nuevo")
+    # def clean(self):
+    #     # Este if simula una busqueda en la base de datos
+    #     if self.cleaned_data["dni"] == "55555555":
+    #         raise ValidationError("DNI registrado por favor verifique de nuevo")
         
         # Si el usuario no existe lo damos de alt
         return self.cleaned_data 
