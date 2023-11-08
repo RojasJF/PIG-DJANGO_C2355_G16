@@ -12,4 +12,6 @@ urlpatterns = [
     path ('estudios_lab/<str:user_name>' ,views.estudios_lab, name='estudios_lab'),
     path ('estudios_img/<str:user_name>' ,views.estudios_img, name='estudios_img'),
     path ('contact' ,views.contact, name='contact'),
+    path ('especialidades/alta' ,views.EspecialidadCreateView.as_view(), name='especialidades_alta'),
+    path ('especialidades/listado' ,views.EspecialidadListView.as_view(), name='especialidades_listado'),
 ]
