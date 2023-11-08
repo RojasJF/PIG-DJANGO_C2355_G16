@@ -7,14 +7,15 @@ class Persona(models.Model):
     edad = models.IntegerField(verbose_name='Edad')
     mail = models.EmailField(max_length=150, verbose_name='Mail')
     contraseña = models.CharField(max_length=150, verbose_name='Contraseña')
-    dni = models.IntegerField(verbose_name='DNI')
-    turnos = models.CharField(max_length=50, verbose_name='Turnos')
+    dni = models.IntegerField(verbose_name='DNI', unique=True)
+    
 
     class Meta:
         abstract = True
 
 class Paciente (Persona):
     legajo = models.CharField(max_length=100, verbose_name='Legajo')
+    turnos = models.CharField(max_length=50, verbose_name='Turnos')
     
 
 class Medico (Persona):
