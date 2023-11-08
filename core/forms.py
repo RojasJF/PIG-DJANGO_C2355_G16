@@ -1,5 +1,8 @@
 from django import forms
+from .models import Especialidad
 from django.core.exceptions import ValidationError
+from django.forms import ModelForm
+from django.shortcuts import render
 
 
 
@@ -18,8 +21,8 @@ class ContactoForm(forms.Form):
 
     def clean(self):
         # Este if simula una busqueda en la base de datos
-        if self.cleaned_data["nombre"] == "Carlos" and self.cleaned_data["apellido"] == "Lopez":
-            raise ValidationError("El usuario Carlos Lopez ya existe")
+        # if self.cleaned_data["nombre"] == "Carlos" and self.cleaned_data["apellido"] == "Lopez":
+            #raise ValidationError("El usuario Carlos Lopez ya existe")
         
         # Si el usuario no existe lo damos de alta
 
@@ -40,11 +43,29 @@ class RegisterForm(forms.Form):
             raise ValidationError("El usuario no puede tener menos de 18 años")
         
         return self.cleaned_data["edad"]
-        
+    
+
+
+class AltaEspecialidadForm(forms.ModelForm):
+    class Meta:
+        model = Especialidad
+        fields = '__all__'
+
+def especialidades_alta(request):
+    if request.method == 'POST':
+        form = AltaEspecialidadForm(request.POST)
+        if form.is_valid():
+            # Procesar el formulario si es válido
+            # ...
+    #else:
+    #    form = AltaEspecialidadForm()
+
+            return render(request, 'core/especialidades_alta.html', {'especialidades_alta_form': form})
+
     # def clean(self):
     #     # Este if simula una busqueda en la base de datos
     #     if self.cleaned_data["dni"] == "55555555":
     #         raise ValidationError("DNI registrado por favor verifique de nuevo")
         
         # Si el usuario no existe lo damos de alt
-        return self.cleaned_data 
+        # return self.cleaned_data 

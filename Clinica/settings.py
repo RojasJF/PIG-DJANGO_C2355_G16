@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'Clinica.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "PIG_G16",
+        "NAME": "Clinica_san_jose",
         "USER": "postgres",
         "PASSWORD": "Tren33",
         "HOST": "127.0.0.1",

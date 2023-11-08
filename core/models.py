@@ -1,4 +1,6 @@
 from django.db import models
+from django.urls import reverse
+
 
 # Create your models here.
 class Persona(models.Model):
@@ -30,6 +32,11 @@ class Especialidad(models.Model):
     medico = models.ForeignKey(Medico,on_delete=models.CASCADE)
     paciente = models.ManyToManyField(Paciente)
 
+    def __str__(self):
+        return self.nombre
+
+    def get_absolute_url(self):
+        return reverse('core/especialidades_listado.html')
 
 
     

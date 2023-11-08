@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
-from django.urls import reverse
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.views.generic import ListView
 from datetime import datetime
-from .forms import ContactoForm , RegisterForm
-from .models import Persona, Paciente , Medico
+from .forms import ContactoForm , RegisterForm, AltaEspecialidadForm
+from .models import Persona, Paciente , Medico, Especialidad
+
+
+
 
 
 def index(request):
@@ -39,9 +44,7 @@ def register(request):
     context={
         'Registro_form':formulario
     }
-
     
-
     return render(request, 'core/register.html',context)
 
 
@@ -110,3 +113,27 @@ def contact(request):
     }
 
     return render (request, "core/contact.html", context)
+
+class EspecialidadCreateView(CreateView):
+    model = Especialidad
+    template_name='core/especialidades_alta.html'
+    success_url = reverse_lazy('especialidades_listado')
+    fields = '__all__'
+  
+ 
+
+
+class EspecialidadDeleteView():
+    pass    
+
+
+class EspecialidadListView(ListView):
+    model = Especialidad
+    context_object_name = 'listado_especialidades'
+    template_name = 'core/especialidades_listado.html'
+    ordering = ['nombre']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cant_registrados'] = Especialidad.objects.count()
+        return context
