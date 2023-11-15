@@ -1,4 +1,17 @@
 {% extends "core/base.html" %}
 {% block title %}MIS TURNOS{% endblock %}
 {% block header %}{% endblock %}
-{% block content %}{% endblock %}
+{% block content %}
+<h2>Mis turnos</h2>
+<ul>
+    {% for turno in turnos %}
+    <li>
+        <p>Fecha y hora: {{ turno.fecha_hora }}</p>
+        <p>Especialidad: {{ turno.especialidad.nombre }}</p>
+        <a href="{% url 'cancelar_turno' dni=dni turno_id=turno.id %}">Cancelar turno</a>
+    </li>
+    {% empty %}
+    <li>No tienes turnos agendados.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

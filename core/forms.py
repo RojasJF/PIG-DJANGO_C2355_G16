@@ -1,5 +1,10 @@
 from django import forms
+from .models import Especialidad
 from django.core.exceptions import ValidationError
+from django.forms import ModelForm
+from django.shortcuts import render
+from .models import Especialidad, Turno, HorarioEspecialidad
+
 
 
 
@@ -32,7 +37,6 @@ class RegisterForm(forms.Form):
     dni = forms.CharField(label="DNI", required=True,widget=forms.NumberInput,max_length=8)
     edad = forms.IntegerField(label="Edad")
     mail = forms.EmailField(label="Mail", required=True)
-    contraseña = forms.CharField(min_length=4,max_length=50,widget=forms.PasswordInput(),label="Contraseña ")
     # Rcontraseña = forms.CharField(min_length=4,max_length=50,widget=forms.PasswordInput(),label="Repetir Contraseña")
 
     def clean_edad(self):
@@ -48,3 +52,25 @@ class RegisterForm(forms.Form):
         
         # Si el usuario no existe lo damos de alt
         return self.cleaned_data 
+    
+
+class AltaEspecialidadForm(forms.ModelForm):
+    class Meta:
+        model = Especialidad
+        fields = '__all__'
+
+
+class TurnoForm(forms.ModelForm):
+    especialidad = forms.ModelChoiceField(queryset=Especialidad.objects.all())
+    fecha = forms.DateField()
+    hora = forms.TimeField()
+
+    class Meta:
+        model = Turno
+        fields = ['especialidad', 'fecha', 'hora']
+
+class FechaTurnoForm(forms.Form):
+    fecha = forms.DateField()
+    hora_inicio = forms.TimeField()
+    hora_fin = forms.TimeField()
+    intervalo = forms.IntegerField(help_text='Intervalo en minutos entre turnos')

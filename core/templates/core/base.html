@@ -18,20 +18,27 @@
         <ul>
             <li>
                 <p>TURNOS</p>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'especialidades_alta' %}">Cargar Especialidad</a></li>
+                <li><a href="{% url 'especialidades_listado' %}">Ver especialidades</a></li>
+
+                {% else %}
+                
                 <ul>
-                    <li><a href="{% url 'solicitar_turno' user_name %}"><p>SOLICITAR TURNO</p></a></li>
-                    <li><a href="{% url 'mis_turnos' user_name %}"><p>MIS TURNOS</p></a></li>
-                    <li><a href="{% url 'turnos_previos' user_name %}"><p>TURNOS PREVIOS</p></a></li>
+                    <li><a href="{% url 'solicitar_turno' dni=dni %}"><p>SOLICITAR TURNO</p></a></li>
+                    <li><a href="{% url 'mis_turnos' dni=dni %}"><p>MIS TURNOS</p></a></li>
+                    <li><a href="{% url 'turnos_previos' dni=dni %}"><p>TURNOS PREVIOS</p></a></li>
                 </ul>
+                {% endif %}
             </li>
             <li>
                 <p>ESTUDIOS</p>
                 <ul>
-                    <li><a href="{% url 'estudios_lab' user_name %}"><p>LABORATORIO</p></a></li>
-                    <li><a href="{% url 'estudios_img' user_name %}"><p>IMAGENES</p></a></li> 
+                    <li><a href="{% url 'estudios_lab' dni=dni %}"><p>LABORATORIO</p></a></li>
+                    <li><a href="{% url 'estudios_img' dni=dni %}"><p>IMAGENES</p></a></li> 
                 </ul>
             </li>
-            <li><a href="{% url 'profile' user_name %}">PERFIL</a></li>
+            <li><a href="{% url 'profile' dni=dni %}">PERFIL</a></li>
             <li><a href="{% url 'contact'%}" target="_blank">CONTACTOS</a></li>
             <li><a href="{% url 'index' %}"><p>CERRAR SESION</p></a> </li>
         </ul>

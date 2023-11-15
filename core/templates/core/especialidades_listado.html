@@ -1,0 +1,17 @@
+{% block content %}
+    <ul>
+        {% for especialidad in object_list %}
+            <li>
+                <p>{{ especialidad.nombre | title }}</p>
+            </li>
+        {% empty %}
+            <p>Sin especialidades registradas</p>
+        {% endfor %}
+    </ul>
+
+    {% if cant_registrados > 0 %}
+        <p>Cantidad de registrados: {{ cant_registrados }}</p>
+    {% else %}
+        <p>No hay registrados</p>
+    {% endif %}
+{% endblock %}

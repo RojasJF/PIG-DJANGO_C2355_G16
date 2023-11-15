@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,12 +13,10 @@
     <main>
         <div class="content_sesion">
             <h2>Registrarse</h2>
-            <form method="post" action="{% url 'register' %}">
-                {% csrf_token %}
-                {{ Registro_form.as_div }}
-                <button class="button_ingreso">
-                    <p>REGISTRAR</p>
-                </button>
+            <form method="POST">
+              {% csrf_token %}
+              {{ Registro_form.as_p }}
+              <button type="submit">Registrarse</button>
             </form>
         </div>
     </main>
