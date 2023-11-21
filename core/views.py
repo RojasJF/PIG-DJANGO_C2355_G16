@@ -91,12 +91,13 @@ def ver_turnos(request, username):
     turnos = Turno.objects.filter(paciente=paciente)
     return render(request, 'core/ver_turnos.html', {'turnos': turnos})
 
+
 @login_required
 def cancelar_turno(request, turno_id):
     turno = Turno.objects.get(id=turno_id)
     if request.method == 'POST':
         turno.delete()
-        return redirect('ver_turnos')
+        return redirect('ver_turnos', username=request.user.username)
     return render(request, 'core/cancelar_turno_confirm.html', {'turno': turno})
 
 
