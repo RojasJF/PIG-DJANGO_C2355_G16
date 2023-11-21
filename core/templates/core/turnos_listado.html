@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block title %}MIS TURNOS{% endblock %}
+{% block header %}{% endblock %}
+
+
+{% block content %}
+{% for turno in turnos %}
+<h2>Especialidad: {{ turno.especialidad.nombre }}</h2>
+<h3>Médico: {{ turno.especialidad.medico.user.username }}</h3>
+<p>Fecha: {{ turno.fecha }} - Horario: {{ turno.horario }}</p>
+{% endfor %}
+{% endblock %}

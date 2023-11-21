@@ -2,10 +2,10 @@
 {% block title %}SOLICITAR TURNO{% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
-<h2>Solicitar turno</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Solicitar</button>
-</form>
+  <h2>Solicitar turno</h2>
+  <form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Solicitar</button>
+  </form>
 {% endblock %}

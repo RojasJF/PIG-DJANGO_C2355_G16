@@ -30,29 +30,25 @@ class RegistroForm(UserCreationForm):
         return user
 
 
-class TurnoForm(forms.ModelForm):
-    horario = forms.ChoiceField(choices=[(time(hour=h // 2, minute=30 * (h % 2)).strftime('%H:%M'), time(hour=h // 2, minute=30 * (h % 2)).strftime('%H:%M')) for h in range(16, 40)])
+# class TurnoForm(forms.ModelForm):
+#     horario = forms.ChoiceField(choices=[(time(hour=h // 2, minute=30 * (h % 2)).strftime('%H:%M'), time(hour=h // 2, minute=30 * (h % 2)).strftime('%H:%M')) for h in range(16, 40)])
 
-    class Meta:
-        model = Turno
-        fields = ['fecha', 'horario', 'paciente']
+#     class Meta:
+#         model = Turno
+#         fields = ['fecha', 'horario', 'paciente']
 
-class PacienteForm(forms.ModelForm):
-    class Meta:
-        model = Paciente
-        fields = ['user', 'dni']
+# class PacienteForm(forms.ModelForm):
+#     class Meta:
+#         model = Paciente
+#         fields = ['user', 'dni']
 
-class MedicoForm(forms.ModelForm):
-    class Meta:
-        model = Medico
-        fields = ['user', 'dni']
+# class MedicoForm(forms.ModelForm):
+#     class Meta:
+#         model = Medico
+#         fields = ['user', 'dni']
 
-class EspecialidadForm(forms.ModelForm):
-    turnos = forms.ModelMultipleChoiceField(queryset=Turno.objects.all())
-    
-    class Meta:
-        model = Especialidad
-        fields = ['nombre', 'turnos']
+class EspecialidadForm(forms.Form):
+    especialidad = forms.ModelChoiceField(queryset=Especialidad.objects.all().order_by('nombre'))
 
 class ContactoForm(forms.Form):
     nombre = forms.CharField(label="Nombre de contacto", required=True)
@@ -133,3 +129,25 @@ class SeleccionarTurnoForm(forms.Form):
         self.fields['turno'] = forms.ModelChoiceField(queryset=turnos_disponibles)
 
 
+class TurnoForm(forms.ModelForm):
+    class Meta:
+        model = Turno
+        fields = ['fecha', 'horario', 'especialidad']
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'especialidad': forms.Select(attrs={'id': 'id_especialidad'}),
+            'turno': forms.Select(attrs={'id': 'id_turno'}),
+        }
+
+class TurnoCancelForm(forms.ModelForm):
+    class Meta:
+        model = Turno
+        fields = []
+
+class SolicitarTurnoForm(forms.ModelForm):
+    class Meta:
+        model = Turno
+        fields = ['especialidad']
+
+class AsignarTurnoForm(forms.Form):
+    turno = forms.ModelChoiceField(queryset=Turno.objects.none())

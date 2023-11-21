@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+{% block title %}MIS TURNOS{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+  <h2>Mis turnos</h2>
+  {% for paciente in paciente_turnos %}
+    {% for turno in paciente.turnos.all %}
+      <p>Especialidad: {{ turno.especialidad.nombre }} - Médico: {{ turno.especialidad.medico.user.last_name }}</p>
+      <p>Fecha: {{ turno.fecha }} - Horario: {{ turno.horario }}</p>
+      <form method="POST" action="{% url 'cancelar_turno' turno.id %}">
+        {% csrf_token %}
+        <button type="submit">Cancelar turno</button>
+      </form>
+    {% endfor %}
+  {% endfor %}
+{% endblock %}

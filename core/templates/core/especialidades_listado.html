@@ -1,13 +1,7 @@
 
 {% extends "core/base.html" %}
-{% block content %}
-{% for especialidad in listado_especialidades %}
-  <h2>{{ especialidad.nombre }}</h2>
-  <h3>Turnos disponibles:</h3>
-  <ul>
-    {% for turno in especialidad.turnos.all %}
-      <li>{{ turno.fecha }} {{ turno.horario }}</li>
-    {% endfor %}
-  </ul>
+{% for turno in turnos %}
+  <h2>{{ turno.especialidad.nombre }}</h2>
+  <p>{{ turno.fecha }} - {{ turno.horario }}</p>
 {% endfor %}
 {% endblock %}
