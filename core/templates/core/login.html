@@ -22,14 +22,23 @@
     </header>
     <main>
         <div class="content_sesion">
-            <h2>Loguearse</h2>
             <body>
                 <h1>Iniciar sesión</h1>
-                <form method="POST" action="{% url 'login' %}">
+                <form method="post" action="{% url 'login' %}">
                     {% csrf_token %}
-                    <label for="dni">DNI:</label>
-                    <input type="text" id="dni" name="dni">
-                    <input type="submit" value="Iniciar sesión">
+                    <table>
+                    <tr>
+                        <td>{{ form.username.label_tag }}</td>
+                        <td>{{ form.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.password.label_tag }}</td>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                    </table>
+                    
+                    <input type="submit" value="login">
+                    <input type="hidden" name="next" value="{{ next }}">
                 </form>
             </body>
                 </button>

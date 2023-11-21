@@ -1,12 +1,56 @@
 from django import forms
-from .models import Especialidad
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .models import Usuario, Paciente , Turno,Especialidad,Medico
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm
-from django.shortcuts import render
-from .models import Especialidad, Turno, HorarioEspecialidad
+from datetime import datetime, time, timedelta, date
+
+class RegistroForm(UserCreationForm):
+    dni = forms.CharField(max_length=8)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def clean_dni(self):
+        dni = self.cleaned_data.get('dni')
+        if User.objects.filter(username=dni).exists():
+            raise forms.ValidationError('Este DNI ya está en uso.')
+        return dni
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['dni']
+        if commit:
+            user.save()
+            paciente = Paciente(user=user, dni=self.cleaned_data['dni'])
+            paciente.save()
+        return user
 
 
+class TurnoForm(forms.ModelForm):
+    horario = forms.ChoiceField(choices=[(time(hour=h // 2, minute=30 * (h % 2)).strftime('%H:%M'), time(hour=h // 2, minute=30 * (h % 2)).strftime('%H:%M')) for h in range(16, 40)])
 
+    class Meta:
+        model = Turno
+        fields = ['fecha', 'horario', 'paciente']
+
+class PacienteForm(forms.ModelForm):
+    class Meta:
+        model = Paciente
+        fields = ['user', 'dni']
+
+class MedicoForm(forms.ModelForm):
+    class Meta:
+        model = Medico
+        fields = ['user', 'dni']
+
+class EspecialidadForm(forms.ModelForm):
+    turnos = forms.ModelMultipleChoiceField(queryset=Turno.objects.all())
+    
+    class Meta:
+        model = Especialidad
+        fields = ['nombre', 'turnos']
 
 class ContactoForm(forms.Form):
     nombre = forms.CharField(label="Nombre de contacto", required=True)
@@ -31,27 +75,7 @@ class ContactoForm(forms.Form):
         return self.cleaned_data
     
 
-class RegisterForm(forms.Form):
-    nombre = forms.CharField(label="Nombre", required=True)
-    apellido =forms.CharField(label="Apellido", required=True)
-    dni = forms.CharField(label="DNI", required=True,widget=forms.NumberInput,max_length=8)
-    edad = forms.IntegerField(label="Edad")
-    mail = forms.EmailField(label="Mail", required=True)
-    # Rcontraseña = forms.CharField(min_length=4,max_length=50,widget=forms.PasswordInput(),label="Repetir Contraseña")
 
-    def clean_edad(self):
-        if self.cleaned_data["edad"] < 18:
-            raise ValidationError("El usuario no puede tener menos de 18 años")
-        
-        return self.cleaned_data["edad"]
-        
-    # def clean(self):
-    #     # Este if simula una busqueda en la base de datos
-    #     if self.cleaned_data["dni"] == "55555555":
-    #         raise ValidationError("DNI registrado por favor verifique de nuevo")
-        
-        # Si el usuario no existe lo damos de alt
-        return self.cleaned_data 
     
 
 class AltaEspecialidadForm(forms.ModelForm):
@@ -60,17 +84,50 @@ class AltaEspecialidadForm(forms.ModelForm):
         fields = '__all__'
 
 
-class TurnoForm(forms.ModelForm):
-    especialidad = forms.ModelChoiceField(queryset=Especialidad.objects.all())
-    fecha = forms.DateField()
-    hora = forms.TimeField()
+class RegistroMedicoForm(UserCreationForm):
+    dni = forms.CharField(max_length=8)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def clean_dni(self):
+        dni = self.cleaned_data.get('dni')
+        if User.objects.filter(username=dni).exists():
+            raise forms.ValidationError('Este DNI ya está en uso.')
+        return dni
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['dni']
+        if commit:
+            user.save()
+            medico = Medico(user=user, dni=self.cleaned_data['dni'])
+            medico.save()
+        return user
+
+class TurnoSinPacienteForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TurnoSinPacienteForm, self).__init__(*args, **kwargs)
+        HORARIO_INICIO = datetime.combine(date.today(), time(hour=9))  # 9:00 AM
+        HORARIO_FIN = HORARIO_INICIO + timedelta(hours=8)  # 8 horas después del inicio
+        INTERVALO = timedelta(minutes=30)
+
+        horarios = [(t.time().strftime('%H:%M'), t.time().strftime('%H:%M')) for t in
+                    [HORARIO_INICIO + i * INTERVALO for i in
+                     range(((HORARIO_FIN - HORARIO_INICIO).seconds // INTERVALO.seconds) + 1)]]
+
+        self.fields['horario'] = forms.ChoiceField(choices=horarios)
 
     class Meta:
         model = Turno
-        fields = ['especialidad', 'fecha', 'hora']
+        exclude = ['paciente']
+class SeleccionarEspecialidadForm(forms.Form):
+    especialidad = forms.ModelChoiceField(queryset=Especialidad.objects.all())
 
-class FechaTurnoForm(forms.Form):
-    fecha = forms.DateField()
-    hora_inicio = forms.TimeField()
-    hora_fin = forms.TimeField()
-    intervalo = forms.IntegerField(help_text='Intervalo en minutos entre turnos')
+class SeleccionarTurnoForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        turnos_disponibles = kwargs.pop('turnos_disponibles')
+        super().__init__(*args, **kwargs)
+        self.fields['turno'] = forms.ModelChoiceField(queryset=turnos_disponibles)
+

@@ -1,17 +1,12 @@
+{% extends "core/base.html" %}
 {% block content %}
-    <ul>
-        {% for especialidad in object_list %}
-            <li>
-                <p>{{ especialidad.nombre | title }}</p>
-            </li>
-        {% empty %}
-            <p>Sin especialidades registradas</p>
-        {% endfor %}
-    </ul>
-
-    {% if cant_registrados > 0 %}
-        <p>Cantidad de registrados: {{ cant_registrados }}</p>
-    {% else %}
-        <p>No hay registrados</p>
-    {% endif %}
+{% for especialidad in listado_especialidades %}
+  <h2>{{ especialidad.nombre }}</h2>
+  <h3>Turnos disponibles:</h3>
+  <ul>
+    {% for turno in especialidad.turnos.all %}
+      <li>{{ turno.fecha }} {{ turno.horario }}</li>
+    {% endfor %}
+  </ul>
+{% endfor %}
 {% endblock %}

@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,43 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/Just_MusicLOCOICO.ico" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
-    {%block extra_css %}{% endblock %}
+    {% block extra_css %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
     <header>
-        <h1><h1>Bienvenido {{user_name}}</h1></h1>
+        <h1>Bienvenido {{user_name}}</h1>
         {% block header %}{% endblock %}
     </header>
     <nav>
         <ul>
-            <li>
-                <p>TURNOS</p>
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'especialidades_alta' %}">Cargar Especialidad</a></li>
-                <li><a href="{% url 'especialidades_listado' %}">Ver especialidades</a></li>
-
-                {% else %}
-                
-                <ul>
-                    <li><a href="{% url 'solicitar_turno' dni=dni %}"><p>SOLICITAR TURNO</p></a></li>
-                    <li><a href="{% url 'mis_turnos' dni=dni %}"><p>MIS TURNOS</p></a></li>
-                    <li><a href="{% url 'turnos_previos' dni=dni %}"><p>TURNOS PREVIOS</p></a></li>
-                </ul>
-                {% endif %}
-            </li>
-            <li>
-                <p>ESTUDIOS</p>
-                <ul>
-                    <li><a href="{% url 'estudios_lab' dni=dni %}"><p>LABORATORIO</p></a></li>
-                    <li><a href="{% url 'estudios_img' dni=dni %}"><p>IMAGENES</p></a></li> 
-                </ul>
-            </li>
-            <li><a href="{% url 'profile' dni=dni %}">PERFIL</a></li>
+            {% if perms.core %}
+            <p>ADMINISTRAR</p>
+                <li><a href="{% url 'especialidades_alta' %}">CARGAR ESPECIALIDAD</a></li>
+                <li><a href="{% url 'especialidades_listado' %}">VER ESPECIALIDADES</a></li>
+                <li><a href="{% url 'register_medico' %}">REGISTRAR MEDICO</a></li>
+                <li><a href="{% url 'crear_turno'  %}">CREAR TURNOS</a></li>
+                <li><a href="{% url 'especialidades_listado' %}">VER ESPECIALIDADES</a></li>
+            {% else %}
+                <li>
+                    <p>TURNOS</p>
+                    <ul>
+                        <li><a href="{% url 'seleccionar_especialidad' %}">SOLICITAR TURNO</a></li>
+                        <li><a href="{% url 'ver_turnos' user.username %}">MIS TURNOS</a></li>
+                    </ul>
+                </li>
+            {% endif %}
+            <li><a href="{% url 'profile'  %}">PERFIL</a></li>
             <li><a href="{% url 'contact'%}" target="_blank">CONTACTOS</a></li>
-            <li><a href="{% url 'index' %}"><p>CERRAR SESION</p></a> </li>
+            <li><a href="{% url 'logout' %}">CERRAR SESION</a></li>
         </ul>
-
     </nav>
     <main>
         {% block content %}{% endblock %}
@@ -60,7 +53,7 @@
             <a href="https://www.tiktok.com/" class="botton-tiktok">
               <i class="fa-brands fa-tiktok"></i>
             </a>
-          </div>
+        </div>
     </footer>
     <script src="https://kit.fontawesome.com/85735f77b2.js" crossorigin="anonymous"></script>
 </body>
