@@ -1,9 +1,11 @@
 from django import forms
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Usuario, Paciente , Turno,Especialidad,Medico
 from django.core.exceptions import ValidationError
 from datetime import datetime, time, timedelta, date
+
 
 class RegistroForm(UserCreationForm):
     dni = forms.CharField(max_length=8)
@@ -67,21 +69,20 @@ class ContactoForm(forms.Form):
 
     def clean(self):
         # Este if simula una busqueda en la base de datos
-        if self.cleaned_data["nombre"] == "Carlos" and self.cleaned_data["apellido"] == "Lopez":
-            raise ValidationError("El usuario Carlos Lopez ya existe")
+        # if self.cleaned_data["nombre"] == "Carlos" and self.cleaned_data["apellido"] == "Lopez":
+            #raise ValidationError("El usuario Carlos Lopez ya existe")
         
         # Si el usuario no existe lo damos de alta
 
         return self.cleaned_data
     
-
-
     
 
 class AltaEspecialidadForm(forms.ModelForm):
     class Meta:
         model = Especialidad
         fields = '__all__'
+
 
 
 class RegistroMedicoForm(UserCreationForm):
@@ -130,4 +131,5 @@ class SeleccionarTurnoForm(forms.Form):
         turnos_disponibles = kwargs.pop('turnos_disponibles')
         super().__init__(*args, **kwargs)
         self.fields['turno'] = forms.ModelChoiceField(queryset=turnos_disponibles)
+
 

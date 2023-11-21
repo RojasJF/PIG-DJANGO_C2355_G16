@@ -8,7 +8,6 @@ urlpatterns = [
 
     path('login/', auth_views.LoginView.as_view(template_name='core/login.html'),name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    
     path ('',views.index, name='index'),
     path ('register',views.register, name='register'),
     path('profile/', views.user_profile, name='profile'),
@@ -26,5 +25,6 @@ urlpatterns = [
     path('seleccionar_especialidad/', views.seleccionar_especialidad, name='seleccionar_especialidad'),
 
     # # path('cargar_fechas_turnos/<int:id_especialidad>/', views.cargar_fechas_turnos, name='cargar_fechas_turnos'),
+
 
 ]

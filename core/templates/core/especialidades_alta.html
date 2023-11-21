@@ -1,4 +1,6 @@
+
 {% extends "core/base.html" %}
+
 {% block header %}
  <br>
 <h2>Alta de especialidades</h2> 
@@ -9,8 +11,10 @@
 
     {% csrf_token %}
     
+
     {{ form.as_p }}
     
     <input type="submit">
 </form>
 {% endblock %}
+
