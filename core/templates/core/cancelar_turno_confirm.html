@@ -15,5 +15,5 @@
     {% csrf_token %}
     <input type="submit" value="Sí, cancelar turno">
 </form>
-<a href="{% url 'ver_turnos' %}">No, volver a mis turnos</a>
+<a href="{% url 'ver_turnos' user.username %}">No, volver a mis turnos</a>
 {% endblock %}

@@ -77,7 +77,7 @@ def seleccionar_turno(request):
             turno = form.cleaned_data['turno']
             turno.paciente = Paciente.objects.get(user=request.user)
             turno.save()
-            return redirect('ver_turnos')
+            return redirect('ver_turnos', username=request.user.username)
     else:
         form = SeleccionarTurnoForm(turnos_disponibles=request.session['turnos_disponibles'])
     return render(request, 'core/seleccionar_turno.html', {'form': form})
@@ -95,7 +95,7 @@ def cancelar_turno(request, turno_id):
     turno = Turno.objects.get(id=turno_id)
     if request.method == 'POST':
         turno.delete()
-        return redirect('ver_turnos')
+        return redirect('ver_turnos', username=request.user.username)
     return render(request, 'core/cancelar_turno_confirm.html', {'turno': turno})
 
 
