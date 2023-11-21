@@ -19,21 +19,20 @@
             {% if perms.core %}
             <p>ADMINISTRAR</p>
                 <li><a href="{% url 'especialidades_alta' %}">CARGAR ESPECIALIDAD</a></li>
-                <li><a href="{% url 'especialidades_listado' %}">VER ESPECIALIDADES</a></li>
                 <li><a href="{% url 'register_medico' %}">REGISTRAR MEDICO</a></li>
                 <li><a href="{% url 'crear_turno'  %}">CREAR TURNOS</a></li>
-                <li><a href="{% url 'especialidades_listado' %}">VER ESPECIALIDADES</a></li>
+                <li><a href="{% url 'turnos' %}">VER ESPECIALIDADES</a></li>
             {% else %}
                 <li>
                     <p>TURNOS</p>
                     <ul>
-                        <li><a href="{% url 'seleccionar_especialidad' %}">SOLICITAR TURNO</a></li>
-                        <li><a href="{% url 'ver_turnos' user.username %}">MIS TURNOS</a></li>
+                        <li><a href="{% url 'solicitar_turno' %}">SOLICITAR TURNO</a></li>
+                        <li><a href="{% url 'mis_turnos' %}">MIS TURNOS</a></li>
                     </ul>
                 </li>
             {% endif %}
             <li><a href="{% url 'profile'  %}">PERFIL</a></li>
-            <li><a href="{% url 'contact'%}" target="_blank">CONTACTOS</a></li>
+            <li><a href="{% url 'contact' user.username %}" target="_blank">CONTACTOS</a></li>
             <li><a href="{% url 'logout' %}">CERRAR SESION</a></li>
         </ul>
     </nav>

@@ -1,17 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse
 from django.urls import reverse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic import ListView
-from datetime import time, timedelta
+from datetime import datetime, date, time, timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from .models import User,Paciente,Turno,Especialidad
-from .forms import RegistroForm,TurnoForm,ContactoForm,AltaEspecialidadForm,RegistroMedicoForm,TurnoSinPacienteForm,EspecialidadForm,SeleccionarTurnoForm,SeleccionarEspecialidadForm
+from .forms import RegistroForm,TurnoForm,ContactoForm,AltaEspecialidadForm,RegistroMedicoForm,SeleccionarTurnoForm,SeleccionarEspecialidadForm,TurnoCancelForm,EspecialidadForm,AsignarTurnoForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group
 
@@ -39,101 +39,74 @@ def register(request):
 def user_profile(request):
     return render(request, 'core/user_profile.html', {'user': request.user})
 
-@login_required
-def seleccionar_especialidad(request):
-    if request.method == 'POST':
-        form = SeleccionarEspecialidadForm(request.POST)
-        if form.is_valid():
-            request.session['especialidad_id'] = form.cleaned_data['especialidad'].id
-            return redirect('solicitar_turno')
-    else:
-        form = SeleccionarEspecialidadForm()
-    return render(request, 'core/seleccionar_especialidad.html', {'form': form})
+
 
 @login_required
 def solicitar_turno(request):
-    especialidad_id = request.session.get('especialidad_id')
-    if not especialidad_id:
-        return redirect('seleccionar_especialidad')
-    especialidad = Especialidad.objects.get(id=especialidad_id)
-    turnos_disponibles = Turno.objects.filter(especialidades=especialidad, paciente=None)
     if request.method == 'POST':
-        form = SeleccionarTurnoForm(request.POST, turnos_disponibles=turnos_disponibles)
+        form = EspecialidadForm(request.POST)
         if form.is_valid():
-            turno = form.cleaned_data['turno']
-            turno.paciente = Paciente.objects.get(user=request.user)
-            turno.save()
-            return redirect('ver_turnos', username=request.user.username)
+            especialidad = form.cleaned_data.get('especialidad')
+            request.session['especialidad_id'] = especialidad.id
+            return redirect('turnos_disponibles')
     else:
-        form = SeleccionarTurnoForm(turnos_disponibles=turnos_disponibles)
+        form = EspecialidadForm()
     return render(request, 'core/solicitar_turno.html', {'form': form})
 
-
-
 @login_required
-def seleccionar_turno(request):
-    if request.method == 'POST':
-        form = SeleccionarTurnoForm(request.POST, turnos_disponibles=request.session['turnos_disponibles'])
-        if form.is_valid():
-            turno = form.cleaned_data['turno']
-            turno.paciente = Paciente.objects.get(user=request.user)
-            turno.save()
-            return redirect('ver_turnos')
+def turnos_disponibles(request):
+    especialidad_id = request.session.get('especialidad_id')
+    if especialidad_id is not None:
+        turnos = Turno.objects.filter(especialidad_id=especialidad_id)
+        if request.method == 'POST':
+            form = AsignarTurnoForm(request.POST)
+            form.fields['turno'].queryset = turnos
+            if form.is_valid():
+                turno = form.cleaned_data.get('turno')
+                # Aquí puedes asignar el turno al paciente
+                paciente = Paciente.objects.get(user=request.user)
+                paciente.turnos.add(turno)
+                return redirect('mis_turnos')
+        else:
+            form = AsignarTurnoForm()
+            form.fields['turno'].queryset = turnos
     else:
-        form = SeleccionarTurnoForm(turnos_disponibles=request.session['turnos_disponibles'])
-    return render(request, 'core/seleccionar_turno.html', {'form': form})
+        form = AsignarTurnoForm()
+        turnos = Turno.objects.none()
+    return render(request, 'core/turnos_disponibles.html', {'form': form, 'turnos': turnos})
 
 
-@login_required
-def ver_turnos(request, username):
-    user = User.objects.get(username=username)
-    paciente = Paciente.objects.get(user=user)
-    turnos = Turno.objects.filter(paciente=paciente)
-    return render(request, 'core/ver_turnos.html', {'turnos': turnos})
+class PacienteTurnosListView(ListView):
+    model = Paciente
+    context_object_name = 'paciente_turnos'
+    template_name = 'core/paciente_turnos.html'
 
+    def get_queryset(self):
+        return Paciente.objects.filter(user=self.request.user)
 
 @login_required
 def cancelar_turno(request, turno_id):
-    turno = Turno.objects.get(id=turno_id)
     if request.method == 'POST':
+        turno = get_object_or_404(Turno, id=turno_id)
         turno.delete()
-        return redirect('ver_turnos', username=request.user.username)
-    return render(request, 'core/cancelar_turno_confirm.html', {'turno': turno})
+    return redirect('mis_turnos')
 
 
-def estudios_lab(request, user_name):
-    context = {
-        'user_name': user_name
-    }
-
-    return render(request, 'core/estudios_lab.html',context)
-
-def estudios_img(request, user_name):
-    context = {
-        'user_name': user_name
-    }
-
-
-    return render(request, 'core/estudios_img.html',context)
-
-
-def contact(request):
-    
+def contact(request, username):
     if request.method == "POST":
         formulario = ContactoForm(request.POST)
 
         if formulario.is_valid():
-          
             return redirect(reverse("login"))
     else:
         formulario = ContactoForm()
 
     context={
-        'contacto_form':formulario
+        'contacto_form':formulario,
+        'username': username
     }
 
     return render (request, "core/contact.html", context)
-
 
 def register_medico(request):
     if request.method == 'POST':
@@ -165,18 +138,13 @@ class EspecialidadDeleteView(LoginRequiredMixin):
     pass    
 
 
-class EspecialidadListView(LoginRequiredMixin, ListView):
+class TurnoListView(ListView):
+    model = Turno
+    context_object_name = 'turnos'
+    template_name = 'core/turnos_listado.html'
 
-    model = Especialidad
-    context_object_name = 'listado_especialidades'
-    template_name = 'core/especialidades_listado.html'
-    ordering = ['nombre']
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['cant_registrados'] = Especialidad.objects.count()
-        context['especialidades'] = Especialidad.objects.prefetch_related('turnos')  # Agrega las especialidades con sus turnos al contexto
-        return context
+    def get_queryset(self):
+        return Turno.objects.select_related('especialidad', 'especialidad__medico').order_by('especialidad__nombre', 'especialidad__medico__user__username', 'fecha', 'horario')
     
 
 @permission_required('core.add_especialidad')
@@ -199,11 +167,16 @@ def alta_especialidad(request):
 @permission_required('core.add_turno')
 def crear_turno(request):
     if request.method == 'POST':
-        form = TurnoSinPacienteForm(request.POST)
+        form = TurnoForm(request.POST)
         if form.is_valid():
-            turno = form.save()
+            fecha = form.cleaned_data.get('fecha')
+            especialidad = form.cleaned_data.get('especialidad')
+            inicio = time(hour=8)
+            fin = time(hour=16)
+            while inicio <= fin:
+                Turno.objects.create(fecha=fecha, horario=inicio, especialidad=especialidad)
+                inicio = (datetime.combine(date.today(), inicio) + timedelta(minutes=30)).time()
             return redirect('crear_turno')
     else:
-        form = TurnoSinPacienteForm()
+        form = TurnoForm()
     return render(request, 'core/crear_turno.html', {'form': form})
-

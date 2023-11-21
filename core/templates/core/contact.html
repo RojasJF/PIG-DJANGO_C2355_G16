@@ -5,7 +5,7 @@
 <h2>CONTACTANOS</h2> 
 {% endblock %}
 {% block content %}
-<form method="post" action="{% url 'contact' %}">
+<form method="post" action="{% url 'contact' user.username %}">
     {% csrf_token %}
     {{ contacto_form.as_p }}
     <input type="submit">

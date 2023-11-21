@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block header %}
+ <br>
+<h2>Turnos disponibles</h2> 
+{% endblock %}
+{% block content %}
+  <h2>Turnos disponibles</h2>
+  <form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Asignar turno</button>
+  </form>
+  {% for turno in turnos %}
+    <p>{{ turno.fecha }} - {{ turno.horario }}</p>
+  {% endfor %}
+{% endblock %}
