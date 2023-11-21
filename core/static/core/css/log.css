@@ -4,31 +4,39 @@
     box-sizing: border-box;
 }
 
-header{
-background-color: white;
-}
-body{
+body {
     background-color: #555;
-    
+    font-family: Arial, sans-serif;
 }
 
-h1{
-    text-align: center;
-}
-h2{
-    background-color: aqua
-}
-div {
-    text-align: center;
-    margin: 20px;
-}
 .content_sesion {
-
-    
-    border: 20px solid #555;
     background: white;
     width: 300px; 
     margin: auto;
     margin-top: 15%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
 
+h2 {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+form p {
+    margin-bottom: 10px;
+}
+
+form button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #333;
 }

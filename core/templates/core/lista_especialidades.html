@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+{% block title %}MIS TURNOS{% endblock %}
+{% block header %}{% endblock %}
+
+
+{% block content %}
+  <h2>Especialidades</h2>
+  <ul>
+    {% for especialidad in especialidades %}
+      <li>
+        <a href="{% url 'solicitar_turno' especialidad.id %}">{{ especialidad.nombre }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

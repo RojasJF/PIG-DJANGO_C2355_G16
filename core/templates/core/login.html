@@ -22,16 +22,25 @@
     </header>
     <main>
         <div class="content_sesion">
-            <h2>Loguearse</h2>
-            <form>
-                <p>Usuario</p>
-                <input type="text">
-                <p>Contraseña</p>
-                <input type="password">
-            </form>
-            <a href="">
-                <button class="button_ingreso">
-                    <p>INGRESAR</p>
+            <body>
+                <h1>Iniciar sesión</h1>
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <table>
+                    <tr>
+                        <td>{{ form.username.label_tag }}</td>
+                        <td>{{ form.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.password.label_tag }}</td>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                    </table>
+                    
+                    <input type="submit" value="login">
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+            </body>
                 </button>
             </a>
             <a href="{% url 'register' %}""><p>Registrarse?</p></a>

@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+{% block title %}MIS TURNOS{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+  <h2>Seleccionar especialidad</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Seleccionar especialidad</button>
+  </form>
+{% endblock %}

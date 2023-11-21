@@ -1,4 +1,10 @@
 {% extends "core/base.html" %}
 {% block title %}PERFIL{% endblock %}
 {% block header %}{% endblock %}
-{% block content %}{% endblock %}
+{% block content %}
+  <h2>Perfil de Usuario</h2>
+
+<p><strong>Nombre:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+<p><strong>DNI:</strong> {{ user.paciente.dni }}</p>
+<p><strong>Email:</strong> {{ user.email }}</p>
+{% endblock %}

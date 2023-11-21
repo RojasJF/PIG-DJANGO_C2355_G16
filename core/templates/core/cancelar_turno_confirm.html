@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+{% block title %}MIS TURNOS{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+<h2>Cancelar turno</h2>
+<p>
+    ¿Estás seguro de que quieres cancelar el siguiente turno?<br>
+    Fecha: {{ turno.fecha }}<br>
+    Horario: {{ turno.horario }}<br>
+    Médico: {{ turno.medico }}<br>
+    Especialidad: {{ turno.especialidad }}
+</p>
+<form method="post">
+    {% csrf_token %}
+    <input type="submit" value="Sí, cancelar turno">
+</form>
+<a href="{% url 'ver_turnos' %}">No, volver a mis turnos</a>
+{% endblock %}

@@ -1,20 +1,14 @@
-
 {% extends "core/base.html" %}
-
 {% block header %}
  <br>
 <h2>Alta de especialidades</h2> 
 {% endblock %}
+
 {% block content %}
-
-<form method="post" action="{% url 'especialidades_alta' %}">
-
+  <h2>Crear turno</h2>
+  <form method="POST">
     {% csrf_token %}
-    
-
     {{ form.as_p }}
-    
-    <input type="submit">
-</form>
-{% endblock %}
-
+    <button type="submit">Guardar</button>
+  </form>
+  {% endblock %}
