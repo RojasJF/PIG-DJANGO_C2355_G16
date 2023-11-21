@@ -8,10 +8,11 @@ urlpatterns = [
 
     path('login/', auth_views.LoginView.as_view(template_name='core/login.html'),name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    
     path ('',views.index, name='index'),
     path ('register',views.register, name='register'),
-    path('profile/', views.user_pro    path('solicitar_turno/', views.solicitar_turno, name='solicitar_turno'),
+    path('profile/', views.user_profile, name='profile'),
+    path ('ver_turnos/<str:username>/' ,views.ver_turnos, name='ver_turnos'),
+    path('solicitar_turno/', views.solicitar_turno, name='solicitar_turno'),
     path('cancelar_turno/<int:turno_id>/', views.cancelar_turno, name='cancelar_turno'),
     path ('estudios_lab' ,views.estudios_lab, name='estudios_lab'),
     path ('estudios_img' ,views.estudios_img, name='estudios_img'),
