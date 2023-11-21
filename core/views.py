@@ -31,6 +31,7 @@ def register(request):
             group.user_set.add(user)
             return redirect('login')
     else:
+
         form = RegistroForm()
     return render(request, 'core/register.html', {'form': form})
 
@@ -132,6 +133,7 @@ def contact(request):
 
     return render (request, "core/contact.html", context)
 
+
 def register_medico(request):
     if request.method == 'POST':
         form = RegistroMedicoForm(request.POST)
@@ -148,6 +150,7 @@ def register_medico(request):
 
 class EspecialidadCreateView(PermissionRequiredMixin,CreateView):
     permission_required = 'core.add_especialidad'
+
     model = Especialidad
     template_name='core/especialidades_alta.html'
     success_url = reverse_lazy('especialidades_listado')
@@ -156,11 +159,13 @@ class EspecialidadCreateView(PermissionRequiredMixin,CreateView):
  
 
 
+
 class EspecialidadDeleteView(LoginRequiredMixin):
     pass    
 
 
 class EspecialidadListView(LoginRequiredMixin, ListView):
+
     model = Especialidad
     context_object_name = 'listado_especialidades'
     template_name = 'core/especialidades_listado.html'
@@ -200,3 +205,4 @@ def crear_turno(request):
     else:
         form = TurnoSinPacienteForm()
     return render(request, 'core/crear_turno.html', {'form': form})
+

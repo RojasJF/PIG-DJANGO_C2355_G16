@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Usuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     dni = models.CharField(max_length=8, unique=True)
@@ -27,6 +28,7 @@ class Turno(models.Model):
     fecha = models.DateField()
     horario = models.TimeField()
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE,null=True,blank=True)
+
 
     def __str__(self):
         return f'{self.fecha} {self.horario}  - {self.paciente}'
